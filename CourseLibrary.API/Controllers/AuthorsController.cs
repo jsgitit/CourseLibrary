@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 namespace CourseLibrary.API.Controllers
 {
     [ApiController]
-
+    [Route("api/authors")] // using explicit routing
+    // [Route("api/[controller]")]
     public class AuthorsController : ControllerBase
     {
         private readonly ICourseLibraryRepository _courseLibraryRepository;
@@ -18,7 +19,7 @@ namespace CourseLibrary.API.Controllers
             _courseLibraryRepository = courseLibraryRepository ??
                 throw new ArgumentNullException(nameof(courseLibraryRepository));
         }
-        [HttpGet("api/authors")]
+        [HttpGet()]
         public IActionResult GetAuthors()
         {
             var authorsFromRepo = _courseLibraryRepository.GetAuthors();

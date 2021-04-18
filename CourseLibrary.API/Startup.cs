@@ -25,8 +25,8 @@ namespace CourseLibrary.API
             
             services.AddControllers(setupAction =>
             {
-                setupAction.ReturnHttpNotAcceptable = true;
-            });
+                setupAction.ReturnHttpNotAcceptable = true; // restrict output formats
+            }).AddXmlDataContractSerializerFormatters();  // in addtion to JSON, allow XML output
              
             services.AddScoped<ICourseLibraryRepository, CourseLibraryRepository>();
 

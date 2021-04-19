@@ -37,7 +37,7 @@ namespace CourseLibrary.API.Controllers
                         Age = author.DOB.GetCurrentAge()
                     });
             }
-            return Ok(authorsFromRepo);
+            return Ok(authors);
         }
 
         [HttpGet("{authorId}")]

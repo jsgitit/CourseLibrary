@@ -143,7 +143,7 @@ namespace CourseLibrary.API.Services
                 return GetAuthors();
             }
 
-            var collection = _context.Authors as IQueryable<Author>;  // allows us to deferred execution
+            var collection = _context.Authors as IQueryable<Author>;  // allows us to use deferred execution
 
             if(!string.IsNullOrWhiteSpace(authorsResourceParameters.MainCategory))
             {

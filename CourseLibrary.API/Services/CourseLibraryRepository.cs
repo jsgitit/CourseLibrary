@@ -1,5 +1,6 @@
 ﻿using CourseLibrary.API.DbContexts;
-using CourseLibrary.API.Entities; 
+using CourseLibrary.API.Entities;
+using CourseLibrary.API.ResourceParameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -129,29 +130,32 @@ namespace CourseLibrary.API.Services
         /// <param name="searchQuery"></param>
         /// <returns>List of Authors</returns>
         public IEnumerable<Author> GetAuthors(
-            string mainCategory,
-            string searchQuery)
+            AuthorsResourceParameters authorsResourceParameters)
         {
-            if (string.IsNullOrWhiteSpace(mainCategory) &&
-                string.IsNullOrWhiteSpace(searchQuery))
+            if (authorsResourceParameters == null)
+            {
+                throw new ArgumentNullException(nameof(authorsResourceParameters));
+            }
+            if (string.IsNullOrWhiteSpace(authorsResourceParameters.MainCategory) &&
+                string.IsNullOrWhiteSpace(authorsResourceParameters.SearchQuery))
             {
                 return GetAuthors();
             }
 
             var collection = _context.Authors as IQueryable<Author>;  // allows us to deferred execution
 
-            if(!string.IsNullOrWhiteSpace(mainCategory))
-            { 
-                mainCategory = mainCategory.Trim();
+            if(!string.IsNullOrWhiteSpace(authorsResourceParameters.MainCategory))
+            {
+                var mainCategory = authorsResourceParameters.MainCategory.Trim();
                 collection = collection.Where(a => a.MainCategory == mainCategory);
             }
 
             // Note: Our search will ONLY search the MainCategory, FirstName OR LastName
             // for the searchQuery string. It's not a full text search.
 
-            if (!string.IsNullOrWhiteSpace(searchQuery))
+            if (!string.IsNullOrWhiteSpace(authorsResourceParameters.SearchQuery))
             {
-                searchQuery = searchQuery.Trim();
+                var searchQuery = authorsResourceParameters.SearchQuery.Trim();
                 collection = collection.Where(
                     a => a.MainCategory.Contains(searchQuery) ||
                     a.FirstName.Contains(searchQuery) ||

@@ -18,11 +18,9 @@ namespace CourseLibrary.API.Controllers
         private readonly ICourseLibraryRepository _courseLibraryRepository;
         private readonly IMapper _mapper;
 
-        public AuthorsController
-            (
+        public AuthorsController(
             ICourseLibraryRepository courseLibraryRepository,
-            IMapper mapper
-            )
+            IMapper mapper)
         {
             _courseLibraryRepository = courseLibraryRepository ??
                 throw new ArgumentNullException(nameof(courseLibraryRepository));

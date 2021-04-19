@@ -32,7 +32,7 @@ namespace CourseLibrary.API.Controllers
                     new AuthorDTO()
                     {
                         Id = author.Id,
-                        Name = "{author.FirstName} {author.LastName}",
+                        Name = $"{author.FirstName} {author.LastName}",
                         MainCategory = author.MainCategory,
                         Age = author.DateOfBirth.GetCurrentAge()
                     });

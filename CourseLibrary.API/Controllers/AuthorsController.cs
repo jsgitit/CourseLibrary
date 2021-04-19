@@ -47,7 +47,6 @@ namespace CourseLibrary.API.Controllers
             //}
 
             // automapper implementation replaces foreach
-
             return Ok(_mapper.Map<IEnumerable<AuthorDTO>>(authorsFromRepo));
 
         }

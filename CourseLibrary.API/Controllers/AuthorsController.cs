@@ -28,6 +28,7 @@ namespace CourseLibrary.API.Controllers
                 throw new ArgumentNullException(nameof(mapper));
         }
         [HttpGet()]
+        [HttpHead]
         public ActionResult<IEnumerable<AuthorDTO>> GetAuthors()
         {
             // throw new Exception("Test Exception");

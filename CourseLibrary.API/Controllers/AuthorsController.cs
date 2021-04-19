@@ -34,7 +34,7 @@ namespace CourseLibrary.API.Controllers
                         Id = author.Id,
                         Name = "{author.FirstName} {author.LastName}",
                         MainCategory = author.MainCategory,
-                        Age = author.DOB.GetCurrentAge()
+                        Age = author.DateOfBirth.GetCurrentAge()
                     });
             }
             return Ok(authors);

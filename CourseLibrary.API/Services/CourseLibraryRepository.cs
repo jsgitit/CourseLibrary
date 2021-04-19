@@ -1,6 +1,7 @@
 ﻿using CourseLibrary.API.DbContexts;
 using CourseLibrary.API.Entities;
 using CourseLibrary.API.ResourceParameters;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -129,7 +130,8 @@ namespace CourseLibrary.API.Services
         /// <param name="mainCategory"></param>
         /// <param name="searchQuery"></param>
         /// <returns>List of Authors</returns>
-        public IEnumerable<Author> GetAuthors(AuthorsResourceParameters authorsResourceParameters)
+        public IEnumerable<Author> GetAuthors(
+            [FromQuery] AuthorsResourceParameters authorsResourceParameters)
         {
             if (authorsResourceParameters == null)
             {

@@ -31,7 +31,7 @@ namespace CourseLibrary.API.Controllers
         [HttpGet()]
         [HttpHead]
         public ActionResult<IEnumerable<AuthorDTO>> GetAuthors(
-            AuthorsResourceParameters authorsResourceParameters)
+            [FromQuery] AuthorsResourceParameters authorsResourceParameters)
         {
             // throw new Exception("Test Exception");
             var authorsFromRepo = _courseLibraryRepository.GetAuthors(authorsResourceParameters);

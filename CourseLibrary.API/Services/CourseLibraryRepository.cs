@@ -149,12 +149,14 @@ namespace CourseLibrary.API.Services
             // Note: Our search will ONLY search the MainCategory, FirstName OR LastName
             // for the searchQuery string. It's not a full text search.
 
-            searchQuery = searchQuery.Trim();
-            collection = collection.Where(
-                a => a.MainCategory.Contains(searchQuery) ||
-                a.FirstName.Contains(searchQuery) ||
-                a.LastName.Contains(searchQuery));
-
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                searchQuery = searchQuery.Trim();
+                collection = collection.Where(
+                    a => a.MainCategory.Contains(searchQuery) ||
+                    a.FirstName.Contains(searchQuery) ||
+                    a.LastName.Contains(searchQuery));
+            }
             return collection.ToList();
         }
         public IEnumerable<Author> GetAuthors(IEnumerable<Guid> authorIds)

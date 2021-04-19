@@ -19,7 +19,7 @@ namespace CourseLibrary.API.Profiles
                 .ForMember(
                 dest => dest.Age,
                 opt =>
-                    opt.MapFrom(src => $"{src.DateOfBirth.GetCurrentAge()} {src.LastName}"));
+                    opt.MapFrom(src => src.DateOfBirth.GetCurrentAge()));
 
         }
     }

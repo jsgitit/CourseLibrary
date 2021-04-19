@@ -129,8 +129,7 @@ namespace CourseLibrary.API.Services
         /// <param name="mainCategory"></param>
         /// <param name="searchQuery"></param>
         /// <returns>List of Authors</returns>
-        public IEnumerable<Author> GetAuthors(
-            AuthorsResourceParameters authorsResourceParameters)
+        public IEnumerable<Author> GetAuthors(AuthorsResourceParameters authorsResourceParameters)
         {
             if (authorsResourceParameters == null)
             {

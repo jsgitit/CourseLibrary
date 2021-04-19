@@ -30,7 +30,7 @@ namespace CourseLibrary.API.Controllers
         [HttpGet()]
         public ActionResult<IEnumerable<AuthorDTO>> GetAuthors()
         {
-            throw new Exception("Test Exception");
+            // throw new Exception("Test Exception");
             var authorsFromRepo = _courseLibraryRepository.GetAuthors();
             //var authors = new List<AuthorDTO>();
             //foreach (var author in authorsFromRepo)

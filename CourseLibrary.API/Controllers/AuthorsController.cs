@@ -52,13 +52,13 @@ namespace CourseLibrary.API.Controllers
         }
 
         [HttpGet("{authorId}")]
-        public IActionResult GetAuthor(Guid authorId)
+        public ActionResult<AuthorDTO> GetAuthor(Guid authorId)
         {
             var authorFromRepo = _courseLibraryRepository.GetAuthor(authorId);
             if (authorFromRepo == null)
                 return NotFound();
 
-            return Ok(authorFromRepo);
+            return Ok(_mapper.Map<AuthorDTO>(authorFromRepo));
         }
     }
 }

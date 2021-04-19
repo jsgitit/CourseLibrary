@@ -26,7 +26,7 @@ namespace CourseLibrary.API.Controllers
         {
             var authorsFromRepo = _courseLibraryRepository.GetAuthors();
             var authors = new List<AuthorDTO>();
-            foreach (var author in authors)
+            foreach (var author in authorsFromRepo)
             {
                 authors.Add(
                     new AuthorDTO()

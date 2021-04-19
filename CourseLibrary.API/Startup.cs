@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 
 namespace CourseLibrary.API
 {
@@ -27,7 +28,9 @@ namespace CourseLibrary.API
             {
                 setupAction.ReturnHttpNotAcceptable = true; // restrict output formats
             }).AddXmlDataContractSerializerFormatters();  // in addtion to JSON, allow XML output
-             
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddScoped<ICourseLibraryRepository, CourseLibraryRepository>();
 
             services.AddDbContext<CourseLibraryContext>(options =>

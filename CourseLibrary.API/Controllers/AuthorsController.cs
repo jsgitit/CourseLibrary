@@ -74,7 +74,6 @@ namespace CourseLibrary.API.Controllers
             return CreatedAtRoute("GetAuthor",
                 new { authorId = authorToReturn.Id },
                 authorToReturn);
-
         }
     }
 }

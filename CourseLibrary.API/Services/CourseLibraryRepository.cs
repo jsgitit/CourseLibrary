@@ -138,7 +138,7 @@ namespace CourseLibrary.API.Services
                 return GetAuthors();
             }
 
-            var collection = _context.Authors as IQueryable<Author>;  // deferred execution
+            var collection = _context.Authors as IQueryable<Author>;  // allows us to deferred execution
 
             if(!string.IsNullOrWhiteSpace(mainCategory))
             { 
@@ -157,7 +157,7 @@ namespace CourseLibrary.API.Services
                     a.FirstName.Contains(searchQuery) ||
                     a.LastName.Contains(searchQuery));
             }
-            return collection.ToList();
+            return collection.ToList();  // query is actually executed here, using the expresion tree.
         }
         public IEnumerable<Author> GetAuthors(IEnumerable<Guid> authorIds)
         {

@@ -1,4 +1,5 @@
-﻿using CourseLibrary.API.Helper;
+﻿using AutoMapper;
+using CourseLibrary.API.Helper;
 using CourseLibrary.API.Models;
 using CourseLibrary.API.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -15,29 +16,40 @@ namespace CourseLibrary.API.Controllers
     public class AuthorsController : ControllerBase
     {
         private readonly ICourseLibraryRepository _courseLibraryRepository;
+        private readonly IMapper _mapper;
 
-        public AuthorsController(ICourseLibraryRepository courseLibraryRepository)
+        public AuthorsController
+            (
+            ICourseLibraryRepository courseLibraryRepository,
+            IMapper mapper
+            )
         {
             _courseLibraryRepository = courseLibraryRepository ??
                 throw new ArgumentNullException(nameof(courseLibraryRepository));
+            _mapper = mapper ??
+                throw new ArgumentNullException(nameof(mapper));
         }
         [HttpGet()]
         public ActionResult<IEnumerable<AuthorDTO>> GetAuthors()
         {
             var authorsFromRepo = _courseLibraryRepository.GetAuthors();
-            var authors = new List<AuthorDTO>();
-            foreach (var author in authorsFromRepo)
-            {
-                authors.Add(
-                    new AuthorDTO()
-                    {
-                        Id = author.Id,
-                        Name = $"{author.FirstName} {author.LastName}",
-                        MainCategory = author.MainCategory,
-                        Age = author.DateOfBirth.GetCurrentAge()
-                    });
-            }
-            return Ok(authors);
+            //var authors = new List<AuthorDTO>();
+            //foreach (var author in authorsFromRepo)
+            //{
+            //    authors.Add(
+            //        new AuthorDTO()
+            //        {
+            //            Id = author.Id,
+            //            Name = $"{author.FirstName} {author.LastName}",
+            //            MainCategory = author.MainCategory,
+            //            Age = author.DateOfBirth.GetCurrentAge()
+            //        });
+            //}
+
+            // automapper implementation replaces foreach
+
+            return Ok(_mapper.Map<IEnumerable<AuthorDTO>>(authorsFromRepo));
+
         }
 
         [HttpGet("{authorId}")]
@@ -48,6 +60,6 @@ namespace CourseLibrary.API.Controllers
                 return NotFound();
 
             return Ok(authorFromRepo);
-        }    
+        }
     }
 }

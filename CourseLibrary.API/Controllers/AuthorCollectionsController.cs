@@ -49,7 +49,6 @@ namespace CourseLibrary.API.Controllers
             return Ok(authorsToReturn);
         }
 
-
         [HttpPost]
         public ActionResult<IEnumerable<AuthorDTO>> CreateAuthorCollection(
             IEnumerable<AuthorForCreationDTO> authorCollection)

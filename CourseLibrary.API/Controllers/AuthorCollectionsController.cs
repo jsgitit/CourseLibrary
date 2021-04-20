@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CourseLibrary.API.Helpers;
 using CourseLibrary.API.Models;
 using CourseLibrary.API.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,29 @@ namespace CourseLibrary.API.Controllers
                 throw new ArgumentNullException(nameof(mapper));
         }
 
+        [HttpGet("({ids})", Name = "GetAuthorCollection")]
+        public IActionResult GetAuthorsCollection(
+            [FromRoute]
+            [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
+        {
+            if (ids == null)
+            {
+                return BadRequest();
+            }
+            var authorEntities = _courseLibraryRepository.GetAuthors(ids);
+
+            if (ids.Count() != authorEntities.Count())
+            {
+                return NotFound();
+            }
+
+            var authorsToReturn = 
+                _mapper.Map<IEnumerable<AuthorDTO>>(authorEntities);
+
+            return Ok(authorsToReturn);
+        }
+
+
         [HttpPost]
         public ActionResult<IEnumerable<AuthorDTO>> CreateAuthorCollection(
             IEnumerable<AuthorForCreationDTO> authorCollection)
@@ -39,7 +63,15 @@ namespace CourseLibrary.API.Controllers
             }
             _courseLibraryRepository.Save();
 
-            return Ok(); // TODO implement a Location URI
+            var authorCollectionToReturn =
+                _mapper.Map<IEnumerable<AuthorDTO>>(authorEntities);
+
+            var idsAsString = string.Join(",", 
+                authorCollectionToReturn.Select(a => a.Id));
+
+            return CreatedAtRoute("GetAuthorCollection",
+                new { ids = idsAsString },
+                authorCollectionToReturn);
         }
     }
 }

@@ -23,6 +23,20 @@ namespace CourseLibrary.API.Models
                 yield return new ValidationResult(
                     "The provided description should be different than the title.",
                     new[] { "CourseForCreationDTO" });
+
+                    // SAMPLE ERROR in response body:
+                    //            {
+                    //                "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                    //                "title": "One or more validation errors occurred.",
+                    //                "status": 400,
+                    //                "traceId": "|98fb9c26-47761db3b03e5dec.",
+                    //                "errors": {
+                    //                    "CourseForCreationDTO": [
+                    //                        "The provided description should be different than the title."
+                    //    ]
+                    //}
+                    //            }
+
             }
         }
 

@@ -101,7 +101,7 @@ namespace CourseLibrary.API.Controllers
                         authorId,
                         courseId = courseToAdd.Id
                     },
-                    courseToAdd);
+                    courseToReturn);
 
             }
 

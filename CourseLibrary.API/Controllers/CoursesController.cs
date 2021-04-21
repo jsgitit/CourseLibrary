@@ -4,8 +4,6 @@ using CourseLibrary.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CourseLibrary.API.Controllers
 {
@@ -78,14 +76,29 @@ namespace CourseLibrary.API.Controllers
         }
 
         [HttpPut("{courseId}")]
-        public ActionResult UpdateCourseForAuthor(
+        public IActionResult UpdateCourseForAuthor(
             Guid authorId,
             Guid courseId,
             CourseForUpdateDTO course)
         {
             if (!_courseLibraryRepository.AuthorExists(authorId))
             {
-                return NotFound();
+                // We are changing from NotFound() to "Upserting"
+                // return NotFound();
+
+                // Implement Upsert logic
+                var courseToAdd = _mapper.Map<Entities.Course>(course);
+                courseToAdd.Id = courseId;
+                _courseLibraryRepository.AddCourse(authorId, courseToAdd);
+                _courseLibraryRepository.Save();
+                return CreatedAtRoute("GetCourseForAuthor",
+                new
+                {
+                    authorId,
+                    courseId = courseToAdd.Id
+                },
+                courseToAdd);
+
             }
 
             var courseForAuthorFromRepo = _courseLibraryRepository.GetCourse(authorId, courseId);

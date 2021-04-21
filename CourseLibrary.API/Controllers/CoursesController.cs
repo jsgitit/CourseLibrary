@@ -20,9 +20,9 @@ namespace CourseLibrary.API.Controllers
             IMapper mapper
             )
         {
-            _courseLibraryRepository = courseLibraryRepository ?? 
+            _courseLibraryRepository = courseLibraryRepository ??
                 throw new ArgumentNullException(nameof(courseLibraryRepository));
-            _mapper = mapper ?? 
+            _mapper = mapper ??
                 throw new ArgumentNullException(nameof(courseLibraryRepository));
         }
 
@@ -75,6 +75,36 @@ namespace CourseLibrary.API.Controllers
                     courseId = courseToReturn.Id
                 },
                 courseToReturn);
+        }
+
+        [HttpPut("{courseId}")]
+        public ActionResult UpdateCourseForAuthor(
+            Guid authorId,
+            Guid courseId,
+            CourseForUpdateDTO course)
+        {
+            if (!_courseLibraryRepository.AuthorExists(authorId))
+            {
+                return NotFound();
+            }
+
+            var courseForAuthorFromRepo = _courseLibraryRepository.GetCourse(authorId, courseId);
+            if (courseForAuthorFromRepo == null)
+            {
+                return NotFound();
+            }
+
+            // Map the entity to a courseForUpdateDTO
+            // Apply the update field values to that DTO
+            // Map the courseForUpdateDTO back to an entity
+            _mapper.Map(course, courseForAuthorFromRepo);
+            // After the Map() above, the Entity will now contain the updated fields,
+            // adhering to any projections we defined in the profile
+
+            // Update the repo
+            _courseLibraryRepository.UpdateCourse(courseForAuthorFromRepo);
+            _courseLibraryRepository.Save();
+            return NoContent();
         }
     }
 }

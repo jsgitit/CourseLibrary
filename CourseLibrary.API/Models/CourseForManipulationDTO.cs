@@ -14,7 +14,6 @@ namespace CourseLibrary.API.Models
         [MaxLength(100, ErrorMessage = "The title should not have more than 100 characters.")]
         public string Title { get; set; }
 
-        [Required(ErrorMessage = "You should fill out a description.")]
         [MaxLength(1500, ErrorMessage = "The description should not have more than 1500 characters")]
         public virtual string Description { get; set; }
     }

@@ -83,28 +83,26 @@ namespace CourseLibrary.API.Controllers
         {
             if (!_courseLibraryRepository.AuthorExists(authorId))
             {
-                // We are changing from NotFound() to "Upserting"
-                // return NotFound();
-
-                // Implement Upsert logic
-                var courseToAdd = _mapper.Map<Entities.Course>(course);
-                courseToAdd.Id = courseId;
-                _courseLibraryRepository.AddCourse(authorId, courseToAdd);
-                _courseLibraryRepository.Save();
-                return CreatedAtRoute("GetCourseForAuthor",
-                new
-                {
-                    authorId,
-                    courseId = courseToAdd.Id
-                },
-                courseToAdd);
-
+                return NotFound();
             }
 
             var courseForAuthorFromRepo = _courseLibraryRepository.GetCourse(authorId, courseId);
             if (courseForAuthorFromRepo == null)
             {
-                return NotFound();
+                // Implement Upsert logic
+                var courseToAdd = _mapper.Map<Entities.Course>(course);
+                courseToAdd.Id = courseId;
+                _courseLibraryRepository.AddCourse(authorId, courseToAdd);
+                _courseLibraryRepository.Save();
+                var courseToReturn = _mapper.Map<CourseDTO>(courseToAdd);
+                return CreatedAtRoute("GetCourseForAuthor",
+                    new
+                    {
+                        authorId,
+                        courseId = courseToAdd.Id
+                    },
+                    courseToAdd);
+
             }
 
             // Map the entity to a courseForUpdateDTO

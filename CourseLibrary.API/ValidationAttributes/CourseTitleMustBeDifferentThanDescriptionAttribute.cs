@@ -15,11 +15,11 @@ namespace CourseLibrary.API.ValidationAttributes
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var course = (CourseForCreationDTO)validationContext.ObjectInstance;
+            var course = (CourseForManipulationDTO)validationContext.ObjectInstance;
             if (course.Title == course.Description) // sample rule
             {
                 return new ValidationResult(ErrorMessage,
-                    new[] { nameof(CourseForCreationDTO) });
+                    new[] { nameof(CourseForManipulationDTO) });
             }
             return ValidationResult.Success;
         }

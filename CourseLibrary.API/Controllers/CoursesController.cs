@@ -89,7 +89,7 @@ namespace CourseLibrary.API.Controllers
             var courseForAuthorFromRepo = _courseLibraryRepository.GetCourse(authorId, courseId);
             if (courseForAuthorFromRepo == null)
             {
-                // Implement Upsert logic
+                // Implement Upsert logic, and insert the course
                 var courseToAdd = _mapper.Map<Entities.Course>(course);
                 courseToAdd.Id = courseId;
                 _courseLibraryRepository.AddCourse(authorId, courseToAdd);

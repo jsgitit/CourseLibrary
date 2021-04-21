@@ -99,7 +99,7 @@ namespace CourseLibrary.API.Controllers
                     new
                     {
                         authorId,
-                        courseId = courseToAdd.Id
+                        courseId = courseToReturn.Id
                     },
                     courseToReturn);
 

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CourseLibrary.API.Models;
 using CourseLibrary.API.Services;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -90,6 +91,7 @@ namespace CourseLibrary.API.Controllers
             if (courseForAuthorFromRepo == null)
             {
                 // Implement Upsert logic, and insert the course
+                // Client is generating the GUID for courseId in this case.
                 var courseToAdd = _mapper.Map<Entities.Course>(course);
                 courseToAdd.Id = courseId;
                 _courseLibraryRepository.AddCourse(authorId, courseToAdd);
@@ -120,6 +122,40 @@ namespace CourseLibrary.API.Controllers
                                  // In our implementation, it's up to the client
                                  // to decide on GET to update the resource.
                                  // Notice too, how the ActionResult does not contain a <T> to return.
+        }
+
+        [HttpPatch("{courseId}")]
+        public ActionResult PartiallyUpdateCourseForAuthor(
+            Guid authorId,
+            Guid courseId,
+            JsonPatchDocument<CourseForUpdateDTO> patchDocument)
+        {
+            if (!_courseLibraryRepository.AuthorExists(authorId))
+            {
+                return NotFound();
+            }
+            
+            var courseForAuthorRepo = _courseLibraryRepository.GetCourse(authorId, courseId);
+
+            if (courseForAuthorRepo == null)
+            {
+                return NotFound();
+            }
+
+            var courseToPatch = _mapper.Map<CourseForUpdateDTO>(courseForAuthorRepo);
+            
+            // add validation before using ApplyTo()
+            patchDocument.ApplyTo(courseToPatch);
+
+            // map the dto back to the entity
+            _mapper.Map(courseToPatch, courseForAuthorRepo);
+
+            _courseLibraryRepository.UpdateCourse(courseForAuthorRepo);
+
+            _courseLibraryRepository.Save();
+            
+            return NoContent();
+
         }
     }
 }

@@ -115,7 +115,11 @@ namespace CourseLibrary.API.Controllers
             // Update the repo
             _courseLibraryRepository.UpdateCourse(courseForAuthorFromRepo);
             _courseLibraryRepository.Save();
-            return NoContent();
+            return NoContent();  // here we're not return the resource.
+                                 // Some APIs might need the resource.  
+                                 // In our implementation, it's up to the client
+                                 // to decide on GET to update the resource.
+                                 // Notice too, how the ActionResult does not contain a <T> to return.
         }
     }
 }

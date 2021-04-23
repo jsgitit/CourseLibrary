@@ -13,7 +13,8 @@ namespace CourseLibrary.API.ValidationAttributes
 /// </summary>
     public class CourseTitleMustBeDifferentThanDescriptionAttribute : ValidationAttribute
     {
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult IsValid(
+            object value, ValidationContext validationContext)
         {
             var course = (CourseForManipulationDTO)validationContext.ObjectInstance;
             if (course.Title == course.Description) // sample rule

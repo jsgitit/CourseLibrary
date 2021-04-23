@@ -9,6 +9,7 @@ namespace CourseLibrary.API.Models
 {
     public class CourseForUpdateDTO : CourseForManipulationDTO
     {
+        // here we are overriding the Description so that we can add our extra Required attribute.
         [Required(ErrorMessage = "You should fill out a Description.")]
         public override string Description { get => base.Description; set =>base.Description = value; }
 

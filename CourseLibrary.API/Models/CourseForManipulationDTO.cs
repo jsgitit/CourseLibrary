@@ -15,6 +15,8 @@ namespace CourseLibrary.API.Models
         public string Title { get; set; }
 
         [MaxLength(1500, ErrorMessage = "The description should not have more than 1500 characters")]
-        public virtual string Description { get; set; }
+        public virtual string Description { get; set; } // use of virtual allows us to
+                                                        // override, since we have an implementation
+                                                        // in the base class
     }
 }

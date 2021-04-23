@@ -31,12 +31,12 @@ namespace CourseLibrary.API
             {
                 setupAction.ReturnHttpNotAcceptable = true; // restrict output formats
             })
-            .AddXmlDataContractSerializerFormatters()     // in addtion to JSON, allow XML output
             .AddNewtonsoftJson(setupAction =>
             {
                 setupAction.SerializerSettings.ContractResolver =
                     new CamelCasePropertyNamesContractResolver();
             })
+            .AddXmlDataContractSerializerFormatters()     // in addtion to JSON, allow XML output
             .ConfigureApiBehaviorOptions(setupAction => 
             {
                 setupAction.InvalidModelStateResponseFactory = context =>

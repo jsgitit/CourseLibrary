@@ -69,6 +69,9 @@ namespace CourseLibrary.API.Services
         public void UpdateCourse(Course course)
         {
             // no code in this implementation
+            // EF Core will take care to track changes to the model
+            // for us in this implementation
+            // They will persisted when calling Save()
         }
 
         public void AddAuthor(Author author)

@@ -143,7 +143,21 @@ namespace CourseLibrary.API.Controllers
 
             if (courseForAuthorRepo == null)
             {
-                return NotFound();
+                // rather than return not found, let's upsert and create the course
+                // return NotFound();
+
+                var courseDTO = new CourseForUpdateDTO();
+                patchDocument.ApplyTo(courseDTO);
+                var courseToAdd = _mapper.Map<Entities.Course>(courseDTO);
+                courseToAdd.Id = courseId;
+                _courseLibraryRepository.AddCourse(authorId ,courseToAdd);
+                _courseLibraryRepository.Save();
+
+                var courseToReturn = _mapper.Map<CourseDTO>(courseToAdd);
+                return CreatedAtRoute(
+                    "GetCourseForAuthor",
+                    new { authorId, courseId = courseToReturn.Id },
+                    courseToReturn);
             }
 
             var courseToPatch = _mapper.Map<CourseForUpdateDTO>(courseForAuthorRepo);

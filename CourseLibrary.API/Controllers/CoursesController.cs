@@ -147,7 +147,11 @@ namespace CourseLibrary.API.Controllers
                 // return NotFound();
 
                 var courseDTO = new CourseForUpdateDTO();
-                patchDocument.ApplyTo(courseDTO);
+                patchDocument.ApplyTo(courseDTO, ModelState);
+                if (!TryValidateModel(courseDTO))
+                {
+                    return ValidationProblem(ModelState);
+                }
                 var courseToAdd = _mapper.Map<Entities.Course>(courseDTO);
                 courseToAdd.Id = courseId;
                 _courseLibraryRepository.AddCourse(authorId ,courseToAdd);

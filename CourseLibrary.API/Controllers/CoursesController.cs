@@ -143,9 +143,14 @@ namespace CourseLibrary.API.Controllers
             }
 
             var courseToPatch = _mapper.Map<CourseForUpdateDTO>(courseForAuthorRepo);
-            
+
             // add validation before using ApplyTo()
             patchDocument.ApplyTo(courseToPatch);
+            
+            if(!TryValidateModel(courseToPatch))
+            {
+                return ValidationProblem(ModelState);
+            }
 
             // map the dto back to the entity
             _mapper.Map(courseToPatch, courseForAuthorRepo);

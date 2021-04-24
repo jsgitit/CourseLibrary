@@ -36,7 +36,7 @@ namespace CourseLibrary.API
                 setupAction.SerializerSettings.ContractResolver =
                     new CamelCasePropertyNamesContractResolver();
             })
-            .AddXmlDataContractSerializerFormatters()     // in addtion to JSON, allow XML output
+            .AddXmlDataContractSerializerFormatters()     // in addition to JSON, allow XML output
             .ConfigureApiBehaviorOptions(setupAction => 
             {
                 setupAction.InvalidModelStateResponseFactory = context =>

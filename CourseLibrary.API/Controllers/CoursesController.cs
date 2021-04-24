@@ -196,7 +196,7 @@ namespace CourseLibrary.API.Controllers
                 _courseLibraryRepository.GetCourse(authorId, courseId);
             if (courseForAuthorFromRepo == null)
             {
-                return NotFound()
+                return NotFound();
             }
 
             _courseLibraryRepository.DeleteCourse(courseForAuthorFromRepo);

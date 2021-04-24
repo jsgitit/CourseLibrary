@@ -57,8 +57,9 @@ namespace CourseLibrary.API
                         context as Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext;
                     // if there are ModelState errors and all the arguments were correctly
                     // found/parsed, then we're detailing with validation errors
-                    if ((context.ModelState.ErrorCount > 0) && 
-                        (actionExecutingContext?.ActionArguments.Count == 
+                    if (context.ModelState.ErrorCount > 0 && 
+                        (context is ControllerContext || 
+                        actionExecutingContext?.ActionArguments.Count == 
                         context.ActionDescriptor.Parameters.Count))
                     {
                         problemDetails.Type = "https://...";

@@ -140,11 +140,6 @@ namespace CourseLibrary.API.Services
             {
                 throw new ArgumentNullException(nameof(authorsResourceParameters));
             }
-            if (string.IsNullOrWhiteSpace(authorsResourceParameters.MainCategory) &&
-                string.IsNullOrWhiteSpace(authorsResourceParameters.SearchQuery))
-            {
-                return GetAuthors();
-            }
 
             var collection = _context.Authors as IQueryable<Author>;  // allows us to use deferred execution
 
@@ -165,7 +160,10 @@ namespace CourseLibrary.API.Services
                     a.FirstName.Contains(searchQuery) ||
                     a.LastName.Contains(searchQuery));
             }
-            return collection.ToList();  // query is actually executed here, using the expresion tree.
+            return collection
+                .Skip(authorsResourceParameters.PageSize * (authorsResourceParameters.PageNumber - 1))
+                .Take(authorsResourceParameters.PageSize)
+                .ToList();  // query is actually executed here, using the expresion tree built
         }
         public IEnumerable<Author> GetAuthors(IEnumerable<Guid> authorIds)
         {

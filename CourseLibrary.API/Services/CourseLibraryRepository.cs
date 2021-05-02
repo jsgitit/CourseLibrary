@@ -1,5 +1,6 @@
 ﻿using CourseLibrary.API.DbContexts;
 using CourseLibrary.API.Entities;
+using CourseLibrary.API.Helper;
 using CourseLibrary.API.ResourceParameters;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -126,14 +127,14 @@ namespace CourseLibrary.API.Services
         {
             return _context.Authors.ToList<Author>();
         }
-        
+
         /// <summary>
         /// GetAuthors allows for returning a list of authors with filtering and searching 
         /// </summary>
         /// <param name="mainCategory"></param>
         /// <param name="searchQuery"></param>
         /// <returns>List of Authors</returns>
-        public IEnumerable<Author> GetAuthors(
+        public PagedList<Author> GetAuthors(
             AuthorsResourceParameters authorsResourceParameters)
         {
             if (authorsResourceParameters == null)
@@ -143,7 +144,7 @@ namespace CourseLibrary.API.Services
 
             var collection = _context.Authors as IQueryable<Author>;  // allows us to use deferred execution
 
-            if(!string.IsNullOrWhiteSpace(authorsResourceParameters.MainCategory))
+            if (!string.IsNullOrWhiteSpace(authorsResourceParameters.MainCategory))
             {
                 var mainCategory = authorsResourceParameters.MainCategory.Trim();
                 collection = collection.Where(a => a.MainCategory == mainCategory);
@@ -160,10 +161,10 @@ namespace CourseLibrary.API.Services
                     a.FirstName.Contains(searchQuery) ||
                     a.LastName.Contains(searchQuery));
             }
-            return collection
-                .Skip(authorsResourceParameters.PageSize * (authorsResourceParameters.PageNumber - 1))
-                .Take(authorsResourceParameters.PageSize)
-                .ToList();  // query is actually executed here, using the expresion tree built
+            return PagedList<Author>.Create(collection,
+                    authorsResourceParameters.PageNumber,
+                    authorsResourceParameters.PageSize);
+
         }
         public IEnumerable<Author> GetAuthors(IEnumerable<Guid> authorIds)
         {

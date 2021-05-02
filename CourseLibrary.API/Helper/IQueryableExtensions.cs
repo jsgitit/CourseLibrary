@@ -36,12 +36,10 @@ namespace CourseLibrary.API.Helper
             // the orderBy string is separated by "," so we split it
             var orderByAfterSplit = orderBy.Split(',');
 
-            // apply each orderby clause in reverse order - otherwise, the
-            // IQueryable will be ordered in the wrong order
-            foreach (var orderByClause in orderByAfterSplit.Reverse())
+            foreach (var orderByClause in orderByAfterSplit)
             {
                 // trim the orderBy clause, as it might contain leading
-                // or trailing spaces.  Can't trim teh var in Foreach, so use another var.
+                // or trailing spaces.  Can't trim the var in Foreach, so use another var.
                 var trimmedOrderByClause = orderByClause.Trim();
 
                 // if the sort option ends with " desc", we order
@@ -79,7 +77,7 @@ namespace CourseLibrary.API.Helper
                    orderByString = orderByString +
                         (string.IsNullOrWhiteSpace(orderByString) ? string.Empty : ", ") +
                         destinationProperty +
-                        (orderDescending ? " descending" : "ascending");
+                        (orderDescending ? " descending" : " ascending");
                 }
             }
             return source.OrderBy(orderByString);

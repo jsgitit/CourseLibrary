@@ -73,6 +73,46 @@ namespace CourseLibrary.API.DbContexts
                     LastName = "Crow Ridley",
                     DateOfBirth = new DateTime(1721, 10, 11),
                     MainCategory = "Rum"
+                },
+                new Author()
+                {
+                    Id = new Guid("71838f8b-6ab3-4539-9e67-4e77b8ede1c0"),
+                    DateOfBirth = new DateTimeOffset(new DateTime(1969, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 2, 0, 0, 0)),
+                    FirstName = "Huxford",
+                    LastName = "The Hawk Morris",
+                    MainCategory = "Maps"
+                },
+                new Author()
+                {
+                    Id = new Guid("119f9ccb-149d-4d3c-ad4f-40100f38e918"),
+                    DateOfBirth = new DateTimeOffset(new DateTime(1972, 1, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 1, 0, 0, 0)),
+                    FirstName = "Dwennon",
+                    LastName = "Rigger Quye",
+                    MainCategory = "Maps"
+                },
+                new Author()
+                {
+                    Id = new Guid("28c1db41-f104-46e6-8943-d31c0291e0e3"),
+                    DateOfBirth = new DateTimeOffset(new DateTime(1982, 5, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 2, 0, 0, 0)),
+                    FirstName = "Rushford",
+                    LastName = "Subtle Asema",
+                    MainCategory = "Rum"
+                },
+                new Author()
+                {
+                    Id = new Guid("d94a64c2-2e8f-4162-9976-0ffe03d30767"),
+                    DateOfBirth = new DateTimeOffset(new DateTime(1976, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 2, 0, 0, 0)),
+                    FirstName = "Hagley",
+                    LastName = "Imposter Grendel",
+                    MainCategory = "Singing"
+                },
+                new Author()
+                {
+                    Id = new Guid("380c2c6b-0d1c-4b82-9d83-3cf635a3e62b"),
+                    DateOfBirth = new DateTimeOffset(new DateTime(1977, 2, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 1, 0, 0, 0)),
+                    FirstName = "Mabel",
+                    LastName = "Barnacle Grendel",
+                    MainCategory = "Maps"
                 }
                 );
 

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace CourseLibrary.API.Controllers
@@ -28,27 +29,32 @@ namespace CourseLibrary.API.Controllers
             _mapper = mapper ??
                 throw new ArgumentNullException(nameof(mapper));
         }
-        [HttpGet()]
+        [HttpGet(Name = "GetAuthors")]
         [HttpHead]
         public ActionResult<IEnumerable<AuthorDTO>> GetAuthors(
             [FromQuery] AuthorsResourceParameters authorsResourceParameters)
         {
-            // throw new Exception("Test Exception");
             var authorsFromRepo = _courseLibraryRepository.GetAuthors(authorsResourceParameters);
-            //var authors = new List<AuthorDTO>();
-            //foreach (var author in authorsFromRepo)
-            //{
-            //    authors.Add(
-            //        new AuthorDTO()
-            //        {
-            //            Id = author.Id,
-            //            Name = $"{author.FirstName} {author.LastName}",
-            //            MainCategory = author.MainCategory,
-            //            Age = author.DateOfBirth.GetCurrentAge()
-            //        });
-            //}
 
-            // automapper implementation replaces foreach
+            var previousPageLink = authorsFromRepo.HasPrevious ?
+                CreateAuthorsResourceUri(authorsResourceParameters, ResourceUriType.PreviousPage) : null;
+            var nextPageLink = authorsFromRepo.HasNext ?
+                CreateAuthorsResourceUri(authorsResourceParameters, ResourceUriType.NextPage) : null;
+
+            var paginationMetadata = new
+            {
+                totalCount = authorsFromRepo.TotalCount,
+                pageSize = authorsFromRepo.PageSize,
+                currentPage = authorsFromRepo.CurrentPage,
+                totalPages = authorsFromRepo.TotalPages,
+                previousPageLink,
+                nextPageLink,
+            };
+
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+
+
+            // automapper implementation replaces foreach assignment for each property
             return Ok(_mapper.Map<IEnumerable<AuthorDTO>>(authorsFromRepo));
 
         }
@@ -97,6 +103,40 @@ namespace CourseLibrary.API.Controllers
             _courseLibraryRepository.Save();  // Cascading deletes are on by default with EFCore
 
             return NoContent();
+        }
+
+        private string CreateAuthorsResourceUri(AuthorsResourceParameters authorsResourceParameters, ResourceUriType type)
+        {
+            switch (type)
+            {
+                case ResourceUriType.PreviousPage:
+                    return Url.Link("GetAuthors",
+                        new
+                        {
+                            pageNumber = authorsResourceParameters.PageNumber - 1,
+                            pageSize = authorsResourceParameters.PageSize,
+                            mainCategory = authorsResourceParameters.MainCategory,
+                            searchQuery = authorsResourceParameters.SearchQuery
+                        });
+                case ResourceUriType.NextPage:
+                    return Url.Link("GetAuthors",
+                        new
+                        {
+                            pageNumber = authorsResourceParameters.PageNumber + 1,
+                            pageSize = authorsResourceParameters.PageSize,
+                            mainCategory = authorsResourceParameters.MainCategory,
+                            searchQuery = authorsResourceParameters.SearchQuery
+                        });
+                default:
+                    return Url.Link("GetAuthors",
+                        new
+                        {
+                            pageNumber = authorsResourceParameters.PageNumber,
+                            pageSize = authorsResourceParameters.PageSize,
+                            mainCategory = authorsResourceParameters.MainCategory,
+                            searchQuery = authorsResourceParameters.SearchQuery
+                        });
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CourseLibrary.API.Entities;
 using CourseLibrary.API.Helper;
+using CourseLibrary.API.Helpers;
 using CourseLibrary.API.Models;
 using CourseLibrary.API.ResourceParameters;
 using CourseLibrary.API.Services;
@@ -71,13 +72,13 @@ namespace CourseLibrary.API.Controllers
         }
 
         [HttpGet("{authorId}", Name ="GetAuthor")]
-        public ActionResult<AuthorDTO> GetAuthor(Guid authorId)
+        public ActionResult<AuthorDTO> GetAuthor(Guid authorId, string fields)
         {
             var authorFromRepo = _courseLibraryRepository.GetAuthor(authorId);
             if (authorFromRepo == null)
                 return NotFound();
 
-            return Ok(_mapper.Map<AuthorDTO>(authorFromRepo));
+            return Ok(_mapper.Map<AuthorDTO>(authorFromRepo).ShapeData(fields));
         }
 
         [HttpPost]

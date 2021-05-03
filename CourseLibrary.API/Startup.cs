@@ -92,8 +92,11 @@ namespace CourseLibrary.API
                 };
             });
 
-            // registr custom PropertyMappingsService
+            // register custom PropertyMappingsService
             services.AddTransient<IPropertyMappingService, PropertyMappingService>();
+
+            // register custom PropertyCheckerService
+            services.AddTransient<IPropertyCheckerService, PropertyCheckerService>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

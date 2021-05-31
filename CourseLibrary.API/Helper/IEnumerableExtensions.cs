@@ -38,7 +38,7 @@ namespace CourseLibrary.API.Helper
             {
                 // fields are requested so build those fields by splitting them
                 var fieldsAfterSplit = fields.Split(',');
-               
+
                 foreach (var field in fieldsAfterSplit)
                 {
                     // trim each field
@@ -60,32 +60,30 @@ namespace CourseLibrary.API.Helper
                     propertyInfoList.Add(propertyInfo);
 
                 }
+            }
 
-                // run through the source object
-                foreach (TSource sourceObject in source)
+            // run through the source object
+            foreach (TSource sourceObject in source)
+            {
+                // create an ExpandoObject that will hold the selected properties and values
+                var dataShapedObject = new ExpandoObject();
+
+                // Get the value of each property needing to be returned.
+                // for that we need to run through the list.
+
+                foreach (var propertyInfo in propertyInfoList)
                 {
-                    // create an ExpandoObject that will hold the selected properties and values
-                    var dataShapedObject = new ExpandoObject();
 
-                    // Get the value of each property needing to be returned.
-                    // for that we need to run through the list.
+                    // GetValue returns the value of the propert on the source object
+                    var propertyValue = propertyInfo.GetValue(sourceObject);
 
-                    foreach (var propertyInfo in propertyInfoList)
-                    {
-
-                        // GetValue returns the value of the propert on the source object
-                        var propertyValue = propertyInfo.GetValue(sourceObject);
-
-                        // add the field to the ExpandoObject
-                        ((IDictionary<string, object>)dataShapedObject).Add(propertyInfo.Name, propertyValue);
-
-                    }
-
-                    // add the ExpandoObjec to the list
-                    expandoObjectList.Add(dataShapedObject);
+                    // add the field to the ExpandoObject
+                    ((IDictionary<string, object>)dataShapedObject).Add(propertyInfo.Name, propertyValue);
 
                 }
 
+                // add the ExpandoObject to the list
+                expandoObjectList.Add(dataShapedObject);
             }
 
             return expandoObjectList;

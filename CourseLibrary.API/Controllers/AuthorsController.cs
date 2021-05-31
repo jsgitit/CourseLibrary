@@ -81,6 +81,9 @@ namespace CourseLibrary.API.Controllers
         }
 
         [HttpGet("{authorId}", Name ="GetAuthor")]
+
+        // not sure if GetAuthor() should return IActionResult or ActionResult<T>!
+        // video shows IActionResult
         public ActionResult<AuthorDTO> GetAuthor(Guid authorId, string fields)
         {
             if (!_propertyCheckerService.TypeHasProperties<AuthorDTO>(fields))

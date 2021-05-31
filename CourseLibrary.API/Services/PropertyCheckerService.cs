@@ -18,7 +18,7 @@ namespace CourseLibrary.API.Services
             // the fields are separated by a comma, so split it
             var fieldsAfterSplit = fields.Split(',');
 
-            // check if the requiest fields exist on source
+            // check if the request fields exist on source
             foreach (var field in fieldsAfterSplit)
             {
                 // trim each field

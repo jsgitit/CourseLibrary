@@ -95,7 +95,14 @@ namespace CourseLibrary.API.Controllers
             if (authorFromRepo == null)
                 return NotFound();
 
-            return Ok(_mapper.Map<AuthorDTO>(authorFromRepo).ShapeData(fields));
+            var links = CreateLinksForAuthor(authorId, fields);
+
+            var linkedResourceToReturn = _mapper.Map<AuthorDTO>(authorFromRepo).ShapeData(fields)
+                as IDictionary<string, object>;
+            linkedResourceToReturn.Add("links", links);
+
+            return Ok(linkedResourceToReturn);
+            //return Ok(_mapper.Map<AuthorDTO>(authorFromRepo).ShapeData(fields));
         }
 
         [HttpPost]
@@ -118,7 +125,7 @@ namespace CourseLibrary.API.Controllers
             return Ok();
         }
 
-        [HttpDelete("{authorId}")]
+        [HttpDelete("{authorId}", Name = "DeleteAuthor")]
         public ActionResult DeleteAuthor(Guid authorId)
         {
             var authorFromRepo = _courseLibraryRepository.GetAuthor(authorId);
@@ -172,6 +179,28 @@ namespace CourseLibrary.API.Controllers
                             searchQuery = authorsResourceParameters.SearchQuery
                         });
             }
+        }
+        private IEnumerable<LinkDTO> CreateLinksForAuthor(Guid authorId, string fields)
+        {
+            var links = new List<LinkDTO>();
+            
+            if (string.IsNullOrWhiteSpace(fields))
+            {
+                links.Add(new LinkDTO(Url.Link("GetAuthor", new { authorId }), "self", "GET"));
+            }
+            else
+            {
+                links.Add(new LinkDTO(Url.Link("GetAuthor", new { authorId, fields }), "self", "GET"));
+            }
+
+            links.Add(new LinkDTO(Url.Link("DeleteAuthor", new { authorId }), "delete_author", "DELETE"));
+
+            links.Add(new LinkDTO(Url.Link("CreateCourseForAuthor", new { authorId }), "create_course_for_author", "POST"));
+
+            links.Add(new LinkDTO(Url.Link("GetCoursesForAuthor", new { authorId }), "courses", "GET"));
+
+
+            return links;
         }
     }
 }

@@ -116,7 +116,7 @@ namespace CourseLibrary.API.Controllers
             //return Ok(_mapper.Map<AuthorDTO>(authorFromRepo).ShapeData(fields));
         }
 
-        [HttpPost]
+        [HttpPost(Name = "CreateAuthor")]
         public ActionResult<AuthorDTO> CreateAuthor(AuthorForCreationDTO author)
         {
             var authorEntity = _mapper.Map<Entities.Author>(author);

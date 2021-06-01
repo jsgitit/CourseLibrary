@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.Linq;
 
 namespace CourseLibrary.API
 {
@@ -33,6 +35,8 @@ namespace CourseLibrary.API
             })
             .AddNewtonsoftJson(setupAction =>
             {
+                // using NewtonsoftJson because at the time it was the only library
+                // supporting json patch document. Consider changing in the future.
                 setupAction.SerializerSettings.ContractResolver =
                     new CamelCasePropertyNamesContractResolver();
             })
@@ -90,6 +94,18 @@ namespace CourseLibrary.API
                         ContentTypes = { "application/problem+json" }
                     };
                 };
+            });
+
+            // Because of the way the output formatters were defined above,
+            // we have to reconfigure the formatters as seen here.
+            services.Configure<MvcOptions>(config =>
+            {
+                var newtonsoftJsonOutputFormatter =
+                    config.OutputFormatters.OfType<NewtonsoftJsonOutputFormatter>()?.FirstOrDefault();
+                if (newtonsoftJsonOutputFormatter != null)
+                {
+                    newtonsoftJsonOutputFormatter.SuportedMediatyhpes.Add("ApplicationBuilder/vnd.marvin.hateoas+json");
+                }
             });
 
             // register custom PropertyMappingsService

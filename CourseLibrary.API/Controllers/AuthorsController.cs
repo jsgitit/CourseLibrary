@@ -91,7 +91,12 @@ namespace CourseLibrary.API.Controllers
             return Ok(linkedCollectionResource);
 
         }
-
+        [Produces("application/json",
+            "application/vnd.marvin.hateoas+json",
+            "application/vnd.marvin.author.full+json",
+            "application/vnd.marvin.author.full.hateoas+json",
+            "application/vnd.marvin.author.friendly+json",
+            "application/vnd.marvin.author.friendly.hateoas+json")]
         [HttpGet("{authorId}", Name ="GetAuthor")]
 
         // not sure if GetAuthor() should return IActionResult or ActionResult<T>!

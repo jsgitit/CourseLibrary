@@ -143,6 +143,7 @@ namespace CourseLibrary.API.Controllers
                 {
                     fullResourceToReturn.Add("links", links);
                 }
+                return Ok(fullResourceToReturn);
             }
             // friendly author was requested
             var friendlyResourceToReturn = _mapper.Map<AuthorDTO>(authorFromRepo)

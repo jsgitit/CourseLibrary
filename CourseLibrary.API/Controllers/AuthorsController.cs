@@ -6,6 +6,7 @@ using CourseLibrary.API.Models;
 using CourseLibrary.API.ResourceParameters;
 using CourseLibrary.API.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -95,8 +96,13 @@ namespace CourseLibrary.API.Controllers
 
         // not sure if GetAuthor() should return IActionResult or ActionResult<T>!
         // video shows IActionResult
-        public ActionResult<AuthorDTO> GetAuthor(Guid authorId, string fields)
+        public ActionResult<AuthorDTO> GetAuthor(Guid authorId, string fields,
+            [FromHeader(Name = "Accept")] string mediaType)
         {
+            if (!MediaTypeHeaderValue.TryParse(mediaType, out MediaTypeHeaderValue parsedMediaType))
+            {
+                return BadRequest();
+            }
             if (!_propertyCheckerService.TypeHasProperties<AuthorDTO>(fields))
             {
                 return BadRequest();
@@ -105,15 +111,18 @@ namespace CourseLibrary.API.Controllers
             var authorFromRepo = _courseLibraryRepository.GetAuthor(authorId);
             if (authorFromRepo == null)
                 return NotFound();
+            if (parsedMediaType.MediaType == "application/vnd.marvin.hateoas+json")
+            {
+                var links = CreateLinksForAuthor(authorId, fields);
 
-            var links = CreateLinksForAuthor(authorId, fields);
+                var linkedResourceToReturn = _mapper.Map<AuthorDTO>(authorFromRepo).ShapeData(fields)
+                    as IDictionary<string, object>;
+                linkedResourceToReturn.Add("links", links);
 
-            var linkedResourceToReturn = _mapper.Map<AuthorDTO>(authorFromRepo).ShapeData(fields)
-                as IDictionary<string, object>;
-            linkedResourceToReturn.Add("links", links);
-
-            return Ok(linkedResourceToReturn);
-            //return Ok(_mapper.Map<AuthorDTO>(authorFromRepo).ShapeData(fields));
+                return Ok(linkedResourceToReturn);
+            }
+            
+            return Ok(_mapper.Map<AuthorDTO>(authorFromRepo).ShapeData(fields));
         }
 
         [HttpPost(Name = "CreateAuthor")]

@@ -104,7 +104,7 @@ namespace CourseLibrary.API
                     config.OutputFormatters.OfType<NewtonsoftJsonOutputFormatter>()?.FirstOrDefault();
                 if (newtonsoftJsonOutputFormatter != null)
                 {
-                    newtonsoftJsonOutputFormatter.SuportedMediatyhpes.Add("ApplicationBuilder/vnd.marvin.hateoas+json");
+                    newtonsoftJsonOutputFormatter.SupportedMediaTypes.Add("ApplicationBuilder/vnd.marvin.hateoas+json");
                 }
             });
 

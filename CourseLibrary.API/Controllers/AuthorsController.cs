@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CourseLibrary.API.ActionConstraints;
 using CourseLibrary.API.Entities;
 using CourseLibrary.API.Helper;
 using CourseLibrary.API.Helpers;
@@ -157,6 +158,11 @@ namespace CourseLibrary.API.Controllers
         }
 
         [HttpPost(Name = "CreateAuthor")]
+        [RequestHeaderMatchesMediaType("Content-Type",
+            "application/json",
+            "application/vnd.marvin.authorforcreation+json")]
+        [Consumes("application/json",
+            "application/vnd.marvin.authorforcreation+json")]
         public ActionResult<AuthorDTO> CreateAuthor(AuthorForCreationDTO author)
         {
             var authorEntity = _mapper.Map<Entities.Author>(author);
@@ -178,6 +184,30 @@ namespace CourseLibrary.API.Controllers
                 linkedResourceToReturn);
         }
 
+        [HttpPost(Name = "CreateAuthorWithDateOfDeath")]
+        [RequestHeaderMatchesMediaType("Content-Type",
+            "application/vnd.marvin.authorforcreationwithdateofdeath+json")]
+        [Consumes("application/vnd.marvin.authorforcreationwithdateofdeath+json")]
+        public ActionResult<AuthorDTO> CreateAuthorWithDateOfDeath(AuthorForCreationWithDateOfDeathDTO author)
+        {
+            var authorEntity = _mapper.Map<Entities.Author>(author);
+            _courseLibraryRepository.AddAuthor(authorEntity);
+            _courseLibraryRepository.Save();
+
+            // once we get the authorId via Save(), we can return the author
+            var authorToReturn = _mapper.Map<AuthorDTO>(authorEntity);
+
+            var links = CreateLinksForAuthor(authorToReturn.Id, null);
+
+            var linkedResourceToReturn = authorToReturn.ShapeData(null)
+                as IDictionary<string, object>;
+
+            linkedResourceToReturn.Add("links", links);
+
+            return CreatedAtRoute("GetAuthor",
+                new { authorId = linkedResourceToReturn["Id"] },
+                linkedResourceToReturn);
+        }
         [HttpOptions]
         public IActionResult GetAuthorsOptions()
         {

@@ -49,10 +49,14 @@ namespace CourseLibrary.API.ActionConstraints
         public bool Accept(ActionConstraintContext context)
         {
             var requestHeaders = context.RouteContext.HttpContext.Request.Headers;
-            if (!requestHeaders.ContainsKey(_requestHeaderToMatch));
-            {
-                return false;
-            }
+            
+            // These 4 commented line was giving 404 error for each of the three POST Authors
+            // The check probably needs to be updated, since false is always returned.
+
+            //if (!requestHeaders.ContainsKey(_requestHeaderToMatch)); 
+            //{
+            //    return false;
+            //}
 
             var parsedRequestMediaType = new MediaType(requestHeaders[_requestHeaderToMatch]);
 

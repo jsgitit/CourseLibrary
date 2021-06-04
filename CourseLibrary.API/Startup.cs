@@ -145,7 +145,7 @@ namespace CourseLibrary.API
                 });
             }
 
-            app.UseResponseCaching();
+            //app.UseResponseCaching();  // response caching only got us part way there.
             
             app.UseHttpCacheHeaders();
 

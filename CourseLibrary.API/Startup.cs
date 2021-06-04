@@ -26,10 +26,26 @@ namespace CourseLibrary.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpCacheHeaders((expirationModelOptions) =>
+            {
+                expirationModelOptions.MaxAge = 60;
+                expirationModelOptions.CacheLocation = Marvin.Cache.Headers.CacheLocation.Private;
+            },
+            (validationModelOptions) =>
+            {
+                validationModelOptions.MustRevalidate = true;
+            });
+
+            services.AddResponseCaching();
 
             services.AddControllers(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true; // restrict output formats
+                setupAction.CacheProfiles.Add("240SecondCacheProfile",
+                                                new CacheProfile()
+                                                {
+                                                    Duration = 240
+                                                });
             })
             .AddNewtonsoftJson(setupAction =>
             {
@@ -128,6 +144,10 @@ namespace CourseLibrary.API
                     });
                 });
             }
+
+            //app.UseResponseCaching();  // response caching only got us part way there.
+            
+            app.UseHttpCacheHeaders();
 
             app.UseRouting();
 

@@ -128,6 +128,10 @@ namespace CourseLibrary.API.Controllers
 
             // Update the repo
             _courseLibraryRepository.UpdateCourse(courseForAuthorFromRepo);
+
+            // Note: Add a optimistic concurrency check here and return 412 Precondition Failed, telling user record was updated
+            // This is implemented with "If-Match <etag> <> previous etag, give concurrency error. 
+
             _courseLibraryRepository.Save();
             return NoContent();  // here we're not return the resource.
                                  // Some APIs might need the resource.  

@@ -30,6 +30,10 @@ namespace CourseLibrary.API
             {
                 expirationModelOptions.MaxAge = 60;
                 expirationModelOptions.CacheLocation = Marvin.Cache.Headers.CacheLocation.Private;
+            },
+            (validationModelOptions) =>
+            {
+                validationModelOptions.MustRevalidate = true;
             });
 
             services.AddResponseCaching();
